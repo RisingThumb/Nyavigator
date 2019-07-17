@@ -1,0 +1,16 @@
+[
+{
+  "modid": "piclient",
+  "name": "PiClient",
+  "description": "A cheating client for Minecraft",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "https://risingthumb.neocities.org/index.html",
+  "updateUrl": "",
+  "authorList": ["RisingThumb"],
+  "credits": "RisingThumb",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
