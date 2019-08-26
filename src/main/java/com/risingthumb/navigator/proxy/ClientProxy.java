@@ -18,7 +18,7 @@ public class ClientProxy implements IProxy {
 	}
 	
 	public void init(FMLInitializationEvent event) {
-		
+		// We initialise keybindings used
 		keyBindings = new KeyBinding[2];
 		keyBindings[0] = new KeyBinding("key.hud.desc", Keyboard.KEY_H, "key.magicbeans.category");
 		keyBindings[1] = new KeyBinding("key.hud.desc2", Keyboard.KEY_L, "key.magicbeans.category");

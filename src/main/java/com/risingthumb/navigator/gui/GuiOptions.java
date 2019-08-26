@@ -6,13 +6,17 @@ import java.util.List;
 
 import com.risingthumb.navigator.NavigatorMod;
 import com.risingthumb.navigator.classes.Marker;
+import com.risingthumb.navigator.looter.Looter;
 
+import baritone.api.BaritoneAPI;
+import baritone.api.pathing.goals.GoalBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextComponentString;
 
-public class GuiTutorial extends GuiScreen {
+public class GuiOptions extends GuiScreen {
 	
 	public static int[] marks = {0, 0, 0};
 	
@@ -67,18 +71,13 @@ public class GuiTutorial extends GuiScreen {
 	@Override
 	public void initGui() {
 		buttonList.clear();
-		
 		int xPos = (this.width-100)/2;
 		int yPos = (this.height-guiHeight)/2 + 4;
-		
 		for (int i = 0; i < getList().size()-1; i++) {
 			buttonList.add(new GuiButton(i,xPos,yPos+20*i, 100,20, getList().get(i)    ));
 		}
-		
 		int yPosClose = this.height-yPos-20;
-		
 		buttonList.add(button0=new GuiButton(BUTTON0,xPos+20, yPosClose, 60, 20, getList().get(getList().size()-1) ));
-		
 		super.initGui();
 	}
 	
@@ -89,17 +88,30 @@ public class GuiTutorial extends GuiScreen {
 	@Override
 	public void actionPerformed(GuiButton button) throws IOException {
 		switch(button.id) {
-		case BUTTON4:
-			cancelLootChest = !cancelLootChest;
+		case BUTTON4: //Cancel looting chests
+			Minecraft.getMinecraft().player.sendMessage(new TextComponentString("This is a cancel looting signal"));
+			BaritoneAPI.getProvider().getPrimaryBaritone().getPathingBehavior().cancelEverything();
+			GuiOptions.cancelLootChest = false;
+			Looter.firstLoot=true;
 			break;
-		case BUTTON3:
-			lootChest = !lootChest;
+			
+		case BUTTON3: //Looting chests
+			Looter.firstLoot=true;
+			Minecraft.getMinecraft().player.sendMessage(new TextComponentString("This is a loot chest signal"));
+			Looter.fillNewChestLocations();
+			Looter.readAllChestLocations();
 			break;
-		case BUTTON2:
-			cancel = !cancel;
+			
+		case BUTTON2: //Cancel moving to waypoint
+			BaritoneAPI.getProvider().getPrimaryBaritone().getPathingBehavior().cancelEverything();
 			break;
-		case BUTTON1:
-			moveToLoc = !moveToLoc;
+			
+		case BUTTON1: //Moving to waypoint
+			int x = GuiOptions.marks[0];
+			int y = GuiOptions.marks[2];
+			int z = GuiOptions.marks[1];
+			
+			BaritoneAPI.getProvider().getPrimaryBaritone().getCustomGoalProcess().setGoalAndPath(new GoalBlock(x, y, z));
 			break;
 		case BUTTON0:
 			NavigatorMod.saveConfig();

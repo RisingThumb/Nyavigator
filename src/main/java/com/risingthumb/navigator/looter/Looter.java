@@ -5,9 +5,7 @@ import java.util.List;
 
 import com.risingthumb.navigator.EventHandler;
 import com.risingthumb.navigator.classes.Marker;
-import com.risingthumb.navigator.gui.GuiTutorial;
-import com.risingthumb.navigator.timing.Timer;
-import com.risingthumb.navigator.timing.TimerEvent;
+import com.risingthumb.navigator.gui.GuiOptions;
 
 import baritone.api.BaritoneAPI;
 import baritone.api.event.events.PathEvent;
@@ -33,11 +31,11 @@ public class Looter implements AbstractGameEventListener {
 		}
 	}
 	
-	private static void fillNewChestLocations() {
+	public static void fillNewChestLocations() {
 		List<TileEntity> tileEntities = Minecraft.getMinecraft().world.loadedTileEntityList;
 		for(TileEntity te : tileEntities) {
 			if(te instanceof TileEntityChest) {
-				Marker mark = new Marker("",te.getPos().getX(),te.getPos().getY(),te.getPos().getZ());
+				Marker mark = new Marker(te.getPos().getX(),te.getPos().getY(),te.getPos().getZ());
 				Looter.chests.add(mark);
 			}
 		}
@@ -49,7 +47,7 @@ public class Looter implements AbstractGameEventListener {
 			fillNewChestLocations();
 			Marker mark2 = chests.peek();
 			if (mark2==null) {
-				GuiTutorial.looting=false;
+				GuiOptions.looting=false;
 			}
 		}
 		else {
@@ -61,7 +59,7 @@ public class Looter implements AbstractGameEventListener {
 	@Override
 	public void onPathEvent(PathEvent event) {
 		if (event == PathEvent.CANCELED) {
-			if(GuiTutorial.looting && EventHandler.currentTick > tickWaitTime) {
+			if(GuiOptions.looting && EventHandler.currentTick > tickWaitTime) {
 				if (!firstLoot) {
 					Marker chestLoc = chests.remove();
 					Minecraft.getMinecraft().player.sendMessage(new TextComponentString(""+event));

@@ -54,9 +54,9 @@ public class GuiMarkLocations extends GuiScreen {
 	
 	@Override
 	public void initGui() {
-		markX = GuiTutorial.marks[0];
-		markZ = GuiTutorial.marks[1];
-		markY = GuiTutorial.marks[2];
+		markX = GuiOptions.marks[0];
+		markZ = GuiOptions.marks[1];
+		markY = GuiOptions.marks[2];
 		name = "Waypoint";
 		
 		buttonsClearCreate();
@@ -99,8 +99,8 @@ public class GuiMarkLocations extends GuiScreen {
 		int xPos = (this.width-160)/2;
 		int yPos = (this.height-guiHeight)/2 + 4;
 		
-		for(int i = 0; i < GuiTutorial.waypoints.size(); i++) {
-			buttonList.add(new GuiButton(i, xPos+80*(i/10), yPos+20*(i%10), 80, 20, GuiTutorial.waypoints.get(i).getString()));
+		for(int i = 0; i < GuiOptions.waypoints.size(); i++) {
+			buttonList.add(new GuiButton(i, xPos+80*(i/10), yPos+20*(i%10), 80, 20, GuiOptions.waypoints.get(i).getString()));
 		}
 		
 		int yPosClose = this.height-yPos-20;
@@ -109,8 +109,8 @@ public class GuiMarkLocations extends GuiScreen {
 		buttonList.add(buttonAdd=new GuiButton(BUTTONADD,xPos+80, yPosClose, 60, 20, "Add" ));
 		buttonList.add(buttonRemove=new GuiButton(BUTTONREMOVE,xPos+140, yPosClose, 100, 20, "Remove Selected" ));
 		
-		if (GuiTutorial.selected!=-10) {
-			buttonList.get(GuiTutorial.selected).enabled = false;
+		if (GuiOptions.selected!=-10) {
+			buttonList.get(GuiOptions.selected).enabled = false;
 		}
 	}
 	
@@ -140,30 +140,30 @@ public class GuiMarkLocations extends GuiScreen {
 			catch (NumberFormatException nfe) {}
 			
 			
-			if (!GuiTutorial.waypoints.contains(new Marker(name,markX,markY,markZ))) {
-				GuiTutorial.waypoints.add(new Marker(name,markX,markY,markZ));
+			if (!GuiOptions.waypoints.contains(new Marker(name,markX,markY,markZ))) {
+				GuiOptions.waypoints.add(new Marker(name,markX,markY,markZ));
 			}
 			break;
 		case BUTTONREMOVE:
-			for (int i = 0; i<GuiTutorial.waypoints.size(); i++) {
-				Marker m = GuiTutorial.waypoints.get(i);
-				if ((m.getString()==name && m.getX()==markX && m.getY()==markY && m.getZ()==markZ) ||i==GuiTutorial.selected) {
-					GuiTutorial.waypoints.remove(i);
-					GuiTutorial.selected = -10;
+			for (int i = 0; i<GuiOptions.waypoints.size(); i++) {
+				Marker m = GuiOptions.waypoints.get(i);
+				if ((m.getString()==name && m.getX()==markX && m.getY()==markY && m.getZ()==markZ) ||i==GuiOptions.selected) {
+					GuiOptions.waypoints.remove(i);
+					GuiOptions.selected = -10;
 					break;
 				}
 			}
 			break;
 		default:
-			if (button.id>=0 && button.id < GuiTutorial.waypoints.size()) {
-				GuiTutorial.selected = button.id;
-				name = GuiTutorial.waypoints.get(button.id).getString();
-				markX = GuiTutorial.waypoints.get(button.id).getX();
-				markY = GuiTutorial.waypoints.get(button.id).getY();
-				markZ = GuiTutorial.waypoints.get(button.id).getZ();
-				GuiTutorial.marks[0] = markX;
-				GuiTutorial.marks[1] = markZ;
-				GuiTutorial.marks[2] = markY;
+			if (button.id>=0 && button.id < GuiOptions.waypoints.size()) {
+				GuiOptions.selected = button.id;
+				name = GuiOptions.waypoints.get(button.id).getString();
+				markX = GuiOptions.waypoints.get(button.id).getX();
+				markY = GuiOptions.waypoints.get(button.id).getY();
+				markZ = GuiOptions.waypoints.get(button.id).getZ();
+				GuiOptions.marks[0] = markX;
+				GuiOptions.marks[1] = markZ;
+				GuiOptions.marks[2] = markY;
 			}
 			break;
 		}

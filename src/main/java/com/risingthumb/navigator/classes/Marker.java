@@ -18,6 +18,13 @@ public class Marker
 		this.y = y;
 		this.z = z;
 	}
+	public Marker(int x, int y, int z)
+	{
+		this.name = "";
+		this.x = x;
+		this.y = y;
+		this.z = z;
+	}
 
 	public String getString()
 	{
@@ -35,6 +42,7 @@ public class Marker
 
 	// arraylist.contains was producing unexpected results in some situations
 	// rather than figure out why i'll just control how two markers are compared
+	// I know it excludes the name of each marker, but who cares about the names
 	@Override
 	public boolean equals(final Object o)
 	{

@@ -3,7 +3,7 @@ package com.risingthumb.navigator;
 import org.apache.logging.log4j.Logger;
 
 import com.risingthumb.navigator.classes.Marker;
-import com.risingthumb.navigator.gui.GuiTutorial;
+import com.risingthumb.navigator.gui.GuiOptions;
 import com.risingthumb.navigator.proxy.IProxy;
 
 import org.apache.logging.log4j.LogManager;
@@ -56,28 +56,17 @@ public class NavigatorMod {
 	
 	public static void syncConfig() {
 		try {
-			// What mods are loaded
 			CONFIG.load();
-			Property isEnabled = CONFIG.get(Configuration.CATEGORY_GENERAL,
-					"isEnabled", new boolean[] {
-							false,//MoveToLoc
-							false,//cancel
-							});
-			
-			boolean[] values = isEnabled.getBooleanList();
-			GuiTutorial.moveToLoc = values[0];
-			GuiTutorial.cancel = values[1];
-			
 			// Loading markers
 			Property markers = CONFIG.get(Configuration.CATEGORY_GENERAL,
 					"markers", new String[] {
 							"Aspermont:-2850:64:-2140"
 					});
 			String[] waypoints = markers.getStringList();
-			GuiTutorial.waypoints.clear();
+			GuiOptions.waypoints.clear();
 			for(String s:waypoints) {
 				String[] parts = s.split(":");
-				GuiTutorial.waypoints.add(new Marker(parts[0], Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), Integer.parseInt(parts[3])));
+				GuiOptions.waypoints.add(new Marker(parts[0], Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), Integer.parseInt(parts[3])));
 			}
 			
 		} catch(Exception e) {
@@ -92,27 +81,14 @@ public class NavigatorMod {
 	public static void saveConfig() {
 		try {
 			CONFIG.load();
-			Property isEnabled = CONFIG.get(Configuration.CATEGORY_GENERAL,
-					"isEnabled", new boolean[] {
-							false,//MoveToLoc
-							false,//cancel
-							});
-			
-			boolean[] values = {
-					false,//MoveToLoc
-					false,//Cancel
-					};
-			
-			isEnabled.set(values);
-			
 			Property markers = CONFIG.get(Configuration.CATEGORY_GENERAL,
 					"markers", new String[] {
 							"Aspermont:-2850:64:-2140"
-					});
+					}); // Aspermont is a default value
 			
-			String[] waypoints = new String[GuiTutorial.waypoints.size()];
+			String[] waypoints = new String[GuiOptions.waypoints.size()];
 			for (int i=0; i<waypoints.length; i++) {
-				Marker m = GuiTutorial.waypoints.get(i);
+				Marker m = GuiOptions.waypoints.get(i);
 				String input = String.join(":",m.getString(),""+m.getX(),""+m.getY(),""+m.getZ());
 				waypoints[i]=input;
 			}
