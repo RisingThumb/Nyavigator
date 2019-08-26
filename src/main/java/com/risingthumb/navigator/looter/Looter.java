@@ -32,7 +32,9 @@ public class Looter implements AbstractGameEventListener {
 	}
 	
 	public static void fillNewChestLocations() {
+		
 		List<TileEntity> tileEntities = Minecraft.getMinecraft().world.loadedTileEntityList;
+		
 		for(TileEntity te : tileEntities) {
 			if(te instanceof TileEntityChest) {
 				Marker mark = new Marker(te.getPos().getX(),te.getPos().getY(),te.getPos().getZ());

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.risingthumb.navigator.EventHandler;
 import com.risingthumb.navigator.NavigatorMod;
 import com.risingthumb.navigator.classes.Marker;
 import com.risingthumb.navigator.looter.Looter;
@@ -91,13 +92,15 @@ public class GuiOptions extends GuiScreen {
 		case BUTTON4: //Cancel looting chests
 			Minecraft.getMinecraft().player.sendMessage(new TextComponentString("This is a cancel looting signal"));
 			BaritoneAPI.getProvider().getPrimaryBaritone().getPathingBehavior().cancelEverything();
-			GuiOptions.cancelLootChest = false;
+			GuiOptions.looting = false;
 			Looter.firstLoot=true;
 			break;
 			
 		case BUTTON3: //Looting chests
+			GuiOptions.looting = true;
 			Looter.firstLoot=true;
 			Minecraft.getMinecraft().player.sendMessage(new TextComponentString("This is a loot chest signal"));
+			EventHandler.currentTick=0;
 			Looter.fillNewChestLocations();
 			Looter.readAllChestLocations();
 			break;
