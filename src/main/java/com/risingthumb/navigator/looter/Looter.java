@@ -1,5 +1,6 @@
 package com.risingthumb.navigator.looter;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import com.risingthumb.navigator.gui.GuiOptions;
 import com.risingthumb.navigator.scheduling.ScheduledEvent;
 import com.risingthumb.navigator.scheduling.Scheduler;
 import com.risingthumb.navigator.util.CameraUtil;
+import com.risingthumb.navigator.util.ChinesePostchestAlgorithm;
 
 import baritone.api.BaritoneAPI;
 import baritone.api.event.events.PathEvent;
@@ -37,13 +39,15 @@ public class Looter implements AbstractGameEventListener {
 	public static void fillNewChestLocations() {
 		
 		List<TileEntity> tileEntities = Minecraft.getMinecraft().world.loadedTileEntityList;
+		ArrayList<Marker> chestUnqueued = new ArrayList<>();
 		
 		for(TileEntity te : tileEntities) {
 			if(te instanceof TileEntityChest) {
 				Marker mark = new Marker(te.getPos().getX(),te.getPos().getY(),te.getPos().getZ());
-				Looter.chests.add(mark);
+				chestUnqueued.add(mark);
 			}
 		}
+		chests = ChinesePostchestAlgorithm.calculateQueue(chestUnqueued);
 	}
 	
 	public static void continueLooting() {
