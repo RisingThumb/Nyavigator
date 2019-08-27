@@ -1,20 +1,17 @@
 package com.risingthumb.navigator.util;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.math.Vec3d;
 
 public class CameraUtil {
 	
-	public static void lookAtCoordinates(EntityPlayer player, double lookX, double lookY, double lookZ) {
-		double atX = player.posX;
-		double atY = player.posY;
-		double atZ = player.posZ;
-		// Pitch is vertical angle
-		// Yaw is horizontal angle
-		
-		// To be implemented. Requires trigonometry. Math.atan may be useful
-		
-		player.rotationYaw=0f; // Range is from +180 to -180
-		player.rotationPitch=0f; // Range is from +90 to -90
+	public static void lookAtCoordinates(EntityPlayer player, Vec3d target) {
+		Vec3d w = target.subtract(player.getPositionEyes(0)).normalize();
+
+		float yaw = (float) Math.toDegrees(Math.atan2(w.x, w.z)) * -1;
+		float pitch = (float) -Math.toDegrees(Math.atan2(w.y, Math.sqrt(w.z * w.z + w.x * w.x)));
+
+		player.setPositionAndRotation(player.posX, player.posY, player.posZ, yaw, pitch);
 	}
 
 }

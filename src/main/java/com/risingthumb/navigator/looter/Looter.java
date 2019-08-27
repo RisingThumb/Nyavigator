@@ -21,10 +21,12 @@ import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentString;
 
 public class Looter implements AbstractGameEventListener {
-	
+
+	// Marker could probably be replaced with Vec3d
 	public static LinkedList<Marker> chests = new LinkedList<>();
 	public static boolean firstLoot = true;
 	public static int tickWaitTime = 80;
@@ -80,7 +82,7 @@ public class Looter implements AbstractGameEventListener {
 					public void run() {
 						Minecraft.getMinecraft().playerController.clickBlock(new BlockPos(chestLoc.getX(),chestLoc.getY(),chestLoc.getZ()), EnumFacing.UP);
 						Minecraft.getMinecraft().player.swingArm(EnumHand.MAIN_HAND);
-						CameraUtil.lookAtCoordinates(Minecraft.getMinecraft().player, chestLoc.getX(),chestLoc.getY(),chestLoc.getZ());
+						CameraUtil.lookAtCoordinates(Minecraft.getMinecraft().player, new Vec3d(chestLoc.getX(),chestLoc.getY(),chestLoc.getZ()));
 						//Minecraft.getMinecraft().player.rotationPitch=90f;
 					}
 				});
