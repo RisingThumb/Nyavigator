@@ -8,7 +8,7 @@ import com.risingthumb.navigator.classes.Marker;
 
 import net.minecraft.client.Minecraft;
 
-public class ChinesePostchestAlgorithm {
+public class DijkstraAlgorithm {
 	
 	private static double distance2Points(double xPos, double yPos, double zPos, double xPos2, double yPos2, double zPos2) {
 		return Math.sqrt(Math.pow(xPos-xPos2,2)+Math.pow(yPos-yPos2,2)+Math.pow(zPos-zPos2,2));

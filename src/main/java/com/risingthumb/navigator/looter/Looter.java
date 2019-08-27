@@ -9,7 +9,7 @@ import com.risingthumb.navigator.gui.GuiOptions;
 import com.risingthumb.navigator.scheduling.ScheduledEvent;
 import com.risingthumb.navigator.scheduling.Scheduler;
 import com.risingthumb.navigator.util.CameraUtil;
-import com.risingthumb.navigator.util.ChinesePostchestAlgorithm;
+import com.risingthumb.navigator.util.DijkstraAlgorithm;
 
 import baritone.api.BaritoneAPI;
 import baritone.api.event.events.PathEvent;
@@ -47,7 +47,7 @@ public class Looter implements AbstractGameEventListener {
 				chestUnqueued.add(mark);
 			}
 		}
-		chests = ChinesePostchestAlgorithm.calculateQueue(chestUnqueued);
+		chests = DijkstraAlgorithm.calculateQueue(chestUnqueued);
 	}
 	
 	public static void continueLooting() {
