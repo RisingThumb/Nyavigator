@@ -1,15 +1,17 @@
 package com.risingthumb.navigator;
 
+import java.util.ArrayList;
+
 import org.lwjgl.input.Keyboard;
 
 import com.risingthumb.navigator.gui.GuiMarkLocations;
 import com.risingthumb.navigator.gui.GuiOptions;
 import com.risingthumb.navigator.looter.Looter;
 import com.risingthumb.navigator.proxy.ClientProxy;
+import com.risingthumb.navigator.scheduling.Scheduler;
 
 import baritone.api.BaritoneAPI;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -21,7 +23,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @EventBusSubscriber(modid=NavigatorMod.MODID)
 public class EventHandler {
 	
-	public static int currentTick = 0;
+	public static ArrayList<Scheduler> schedulerList = new ArrayList<>();
+	public static ArrayList<Scheduler> cleanUpSchedule = new ArrayList<>();
 	
 	private static boolean hasInitalisedShit = false;
 	
@@ -42,6 +45,20 @@ public class EventHandler {
 	
 	@SubscribeEvent
 	public static void onClientTick(final TickEvent.ClientTickEvent event) {
+		for(Scheduler s: schedulerList) {
+			s.tickTock();
+			if (s.getTick()<=0) {
+				cleanUpSchedule.add(s);
+			}
+		}
+		// This small addition prevents a concurrency error caused by modifying the list as it's been read in the for each loop
+		// Just think of it as, cleaning up your schedule
+		for(Scheduler c: cleanUpSchedule) {
+			schedulerList.remove(c);
+		}
+		cleanUpSchedule.clear();
+		
+		
 		// Initialise any event listeners for the Baritone
 		if (!hasInitalisedShit) {
 			hasInitalisedShit = true;
@@ -59,14 +76,6 @@ public class EventHandler {
 			BaritoneAPI.getSettings().allowParkour.value = true;
 			BaritoneAPI.getSettings().antiCheatCompatibility.value = true;
 		}
-		
-		// This is a shitty timer for how long to wait before continuing looting after hitting a chest.
-		if (GuiOptions.looting == true && currentTick == Looter.tickWaitTime) {
-			Minecraft.getMinecraft().player.sendMessage(new TextComponentString("Continuing looting"));
-			Looter.continueLooting();
-		}
-		
-		currentTick++;
 	}
 
 }

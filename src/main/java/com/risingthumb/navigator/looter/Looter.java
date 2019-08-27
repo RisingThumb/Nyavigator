@@ -3,9 +3,11 @@ package com.risingthumb.navigator.looter;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.risingthumb.navigator.EventHandler;
 import com.risingthumb.navigator.classes.Marker;
 import com.risingthumb.navigator.gui.GuiOptions;
+import com.risingthumb.navigator.scheduling.ScheduledEvent;
+import com.risingthumb.navigator.scheduling.Scheduler;
+import com.risingthumb.navigator.util.CameraUtil;
 
 import baritone.api.BaritoneAPI;
 import baritone.api.event.events.PathEvent;
@@ -24,6 +26,7 @@ public class Looter implements AbstractGameEventListener {
 	public static LinkedList<Marker> chests = new LinkedList<>();
 	public static boolean firstLoot = true;
 	public static int tickWaitTime = 80;
+	public static boolean waitForNextEvent = true;
 	
 	public static void readAllChestLocations() {
 		for (Marker m: chests) {
@@ -47,12 +50,14 @@ public class Looter implements AbstractGameEventListener {
 		Marker ncl = chests.peek();
 		if (ncl == null) {
 			fillNewChestLocations();
-			Marker mark2 = chests.peek();
-			if (mark2==null) {
+			ncl = chests.peek();
+			if (ncl==null) {
 				GuiOptions.looting=false;
 			}
 		}
-		else {
+		
+		if(GuiOptions.looting) {
+			Looter.waitForNextEvent = true;
 			BaritoneAPI.getProvider().getPrimaryBaritone().getCustomGoalProcess().setGoalAndPath(new GoalBlock(ncl.getX(), ncl.getY()+1, ncl.getZ()));
 		}
 		
@@ -61,18 +66,29 @@ public class Looter implements AbstractGameEventListener {
 	@Override
 	public void onPathEvent(PathEvent event) {
 		if (event == PathEvent.CANCELED) {
-			if(GuiOptions.looting && EventHandler.currentTick > tickWaitTime) {
-				if (!firstLoot) {
-					Marker chestLoc = chests.remove();
-					Minecraft.getMinecraft().player.sendMessage(new TextComponentString(""+event));
-					Minecraft.getMinecraft().playerController.clickBlock(new BlockPos(chestLoc.getX(),chestLoc.getY(),chestLoc.getZ()), EnumFacing.UP);
-					Minecraft.getMinecraft().player.swingArm(EnumHand.MAIN_HAND);
-					Minecraft.getMinecraft().player.rotationPitch=90f;
-				}
-				else {
-					firstLoot = false;
-				}
-				EventHandler.currentTick=0;
+			if(GuiOptions.looting && waitForNextEvent) {
+				waitForNextEvent = false;
+				Marker chestLoc = chests.remove();
+				Minecraft.getMinecraft().player.sendMessage(new TextComponentString(""+event));
+				// This is to stop annoying anticheat as you jump onto it and remove the block.
+				new Scheduler(10, new ScheduledEvent() {
+					@Override
+					public void run() {
+						Minecraft.getMinecraft().playerController.clickBlock(new BlockPos(chestLoc.getX(),chestLoc.getY(),chestLoc.getZ()), EnumFacing.UP);
+						Minecraft.getMinecraft().player.swingArm(EnumHand.MAIN_HAND);
+						CameraUtil.lookAtCoordinates(Minecraft.getMinecraft().player, chestLoc.getX(),chestLoc.getY(),chestLoc.getZ());
+						//Minecraft.getMinecraft().player.rotationPitch=90f;
+					}
+				});
+				
+				new Scheduler(tickWaitTime, new ScheduledEvent() {
+					@Override
+					public void run() {
+						Looter.waitForNextEvent = true;
+						Minecraft.getMinecraft().player.sendMessage(new TextComponentString("[!] Continuing looting"));
+						Looter.continueLooting();
+					}
+				});
 				
 			}
 		}

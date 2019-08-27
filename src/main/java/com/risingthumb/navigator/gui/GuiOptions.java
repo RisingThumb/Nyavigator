@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.risingthumb.navigator.EventHandler;
 import com.risingthumb.navigator.NavigatorMod;
 import com.risingthumb.navigator.classes.Marker;
 import com.risingthumb.navigator.looter.Looter;
@@ -90,7 +89,7 @@ public class GuiOptions extends GuiScreen {
 	public void actionPerformed(GuiButton button) throws IOException {
 		switch(button.id) {
 		case BUTTON4: //Cancel looting chests
-			Minecraft.getMinecraft().player.sendMessage(new TextComponentString("This is a cancel looting signal"));
+			Minecraft.getMinecraft().player.sendMessage(new TextComponentString("[!] BE ADVISED, LOOTING HAS BEEN CANCELLED"));
 			BaritoneAPI.getProvider().getPrimaryBaritone().getPathingBehavior().cancelEverything();
 			GuiOptions.looting = false;
 			Looter.firstLoot=true;
@@ -99,17 +98,19 @@ public class GuiOptions extends GuiScreen {
 		case BUTTON3: //Looting chests
 			GuiOptions.looting = true;
 			Looter.firstLoot=true;
-			Minecraft.getMinecraft().player.sendMessage(new TextComponentString("This is a loot chest signal"));
-			EventHandler.currentTick=0;
-			Looter.fillNewChestLocations();
-			Looter.readAllChestLocations();
+			Minecraft.getMinecraft().player.sendMessage(new TextComponentString("[!] BE ADVISED, LOOTING"));
+			Looter.continueLooting();
+			//Looter.readAllChestLocations();
 			break;
 			
 		case BUTTON2: //Cancel moving to waypoint
+			Minecraft.getMinecraft().player.sendMessage(new TextComponentString("[!] BE ADVISED, PATHFINDING HAS BEEN CANCELLED"));
 			BaritoneAPI.getProvider().getPrimaryBaritone().getPathingBehavior().cancelEverything();
 			break;
 			
 		case BUTTON1: //Moving to waypoint
+			Minecraft.getMinecraft().player.sendMessage(new TextComponentString("[!] BE ADVISED, PATHFINDING TO SELECTED WAYPOINT"));
+			
 			int x = GuiOptions.marks[0];
 			int y = GuiOptions.marks[2];
 			int z = GuiOptions.marks[1];

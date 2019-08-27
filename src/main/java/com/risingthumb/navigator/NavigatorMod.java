@@ -44,7 +44,6 @@ public class NavigatorMod {
 	
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
-		LOGGER.info(NavigatorMod.NAME + "says hi!");
 		proxy.init(event);
 	}
 	
