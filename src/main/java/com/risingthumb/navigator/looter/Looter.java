@@ -75,7 +75,7 @@ public class Looter implements AbstractGameEventListener {
 			if(GuiOptions.looting && waitForNextEvent) {
 				waitForNextEvent = false;
 				Marker chestLoc = chests.remove();
-				Minecraft.getMinecraft().player.sendMessage(new TextComponentString(""+event));
+				//Minecraft.getMinecraft().player.sendMessage(new TextComponentString(""+event));
 				// This is to stop annoying anticheat as you jump onto it and remove the block.
 				new Scheduler(10, new ScheduledEvent() {
 					@Override
@@ -91,7 +91,7 @@ public class Looter implements AbstractGameEventListener {
 					@Override
 					public void run() {
 						Looter.waitForNextEvent = true;
-						Minecraft.getMinecraft().player.sendMessage(new TextComponentString("[!] Continuing looting"));
+						//Minecraft.getMinecraft().player.sendMessage(new TextComponentString("[!] Continuing looting"));
 						Looter.continueLooting();
 					}
 				});

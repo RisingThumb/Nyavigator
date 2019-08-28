@@ -89,7 +89,7 @@ public class GuiOptions extends GuiScreen {
 	public void actionPerformed(GuiButton button) throws IOException {
 		switch(button.id) {
 		case BUTTON4: //Cancel looting chests
-			Minecraft.getMinecraft().player.sendMessage(new TextComponentString("[!] BE ADVISED, LOOTING HAS BEEN CANCELLED"));
+			//Minecraft.getMinecraft().player.sendMessage(new TextComponentString("[!] BE ADVISED, LOOTING HAS BEEN CANCELLED"));
 			BaritoneAPI.getProvider().getPrimaryBaritone().getPathingBehavior().cancelEverything();
 			GuiOptions.looting = false;
 			Looter.firstLoot=true;
@@ -98,18 +98,18 @@ public class GuiOptions extends GuiScreen {
 		case BUTTON3: //Looting chests
 			GuiOptions.looting = true;
 			Looter.firstLoot=true;
-			Minecraft.getMinecraft().player.sendMessage(new TextComponentString("[!] BE ADVISED, LOOTING"));
+			//Minecraft.getMinecraft().player.sendMessage(new TextComponentString("[!] BE ADVISED, LOOTING"));
 			Looter.continueLooting();
 			//Looter.readAllChestLocations();
 			break;
 			
 		case BUTTON2: //Cancel moving to waypoint
-			Minecraft.getMinecraft().player.sendMessage(new TextComponentString("[!] BE ADVISED, PATHFINDING HAS BEEN CANCELLED"));
+			//Minecraft.getMinecraft().player.sendMessage(new TextComponentString("[!] BE ADVISED, PATHFINDING HAS BEEN CANCELLED"));
 			BaritoneAPI.getProvider().getPrimaryBaritone().getPathingBehavior().cancelEverything();
 			break;
 			
 		case BUTTON1: //Moving to waypoint
-			Minecraft.getMinecraft().player.sendMessage(new TextComponentString("[!] BE ADVISED, PATHFINDING TO SELECTED WAYPOINT"));
+			//Minecraft.getMinecraft().player.sendMessage(new TextComponentString("[!] BE ADVISED, PATHFINDING TO SELECTED WAYPOINT"));
 			
 			int x = GuiOptions.marks[0];
 			int y = GuiOptions.marks[2];
