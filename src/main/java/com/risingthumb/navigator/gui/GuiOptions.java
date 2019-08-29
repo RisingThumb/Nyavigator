@@ -14,7 +14,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextComponentString;
 
 public class GuiOptions extends GuiScreen {
 	
@@ -93,11 +92,13 @@ public class GuiOptions extends GuiScreen {
 			BaritoneAPI.getProvider().getPrimaryBaritone().getPathingBehavior().cancelEverything();
 			GuiOptions.looting = false;
 			Looter.firstLoot=true;
+			Looter.chests.clear();
 			break;
 			
 		case BUTTON3: //Looting chests
 			GuiOptions.looting = true;
 			Looter.firstLoot=true;
+			Looter.chests.clear(); // Empty it in case it needs to be emptied
 			//Minecraft.getMinecraft().player.sendMessage(new TextComponentString("[!] BE ADVISED, LOOTING"));
 			Looter.continueLooting();
 			//Looter.readAllChestLocations();

@@ -58,11 +58,11 @@ public class Looter implements AbstractGameEventListener {
 			fillNewChestLocations();
 			ncl = chests.peek();
 			if (ncl==null) {
-				GuiOptions.looting=false;
+				GuiOptions.looting=false; // Read below if you change this line
 			}
 		}
 		
-		if(GuiOptions.looting) {
+		if(GuiOptions.looting) { // Please note if you change the GuiOptions.looting part above, YOU NEED TO FIX THIS. If ncl is still null, IT WILL CRASH
 			Looter.waitForNextEvent = true;
 			BaritoneAPI.getProvider().getPrimaryBaritone().getCustomGoalProcess().setGoalAndPath(new GoalBlock(ncl.getX(), ncl.getY()+1, ncl.getZ()));
 		}
