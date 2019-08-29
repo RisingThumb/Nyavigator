@@ -15,7 +15,9 @@ import baritone.api.BaritoneAPI;
 import baritone.api.event.events.PathEvent;
 import baritone.api.event.listener.AbstractGameEventListener;
 import baritone.api.pathing.goals.GoalBlock;
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.EnumFacing;
@@ -28,6 +30,7 @@ public class Looter implements AbstractGameEventListener {
 
 	// Marker could probably be replaced with Vec3d
 	public static LinkedList<Marker> chests = new LinkedList<>();
+	public static ArrayList<Marker> blacklistedChests = new ArrayList<>();
 	public static boolean firstLoot = true;
 	public static int tickWaitTime = 80;
 	public static boolean waitForNextEvent = true;
@@ -49,6 +52,12 @@ public class Looter implements AbstractGameEventListener {
 				chestUnqueued.add(mark);
 			}
 		}
+		for(Marker c : blacklistedChests) {
+			if(chestUnqueued.contains(c)) {
+				chestUnqueued.remove(c);
+			}
+		}
+		
 		chests = DijkstraAlgorithm.calculateQueue(chestUnqueued);
 	}
 	
@@ -83,9 +92,13 @@ public class Looter implements AbstractGameEventListener {
 						Minecraft.getMinecraft().playerController.clickBlock(new BlockPos(chestLoc.getX(),chestLoc.getY(),chestLoc.getZ()), EnumFacing.UP);
 						Minecraft.getMinecraft().player.swingArm(EnumHand.MAIN_HAND);
 						CameraUtil.lookAtCoordinates(Minecraft.getMinecraft().player, new Vec3d(chestLoc.getX(),chestLoc.getY(),chestLoc.getZ()));
+						
+						
 						//Minecraft.getMinecraft().player.rotationPitch=90f;
 					}
 				});
+				
+				Looter.checkOnChest(chestLoc);
 				
 				new Scheduler(tickWaitTime, new ScheduledEvent() {
 					@Override
@@ -98,5 +111,21 @@ public class Looter implements AbstractGameEventListener {
 				
 			}
 		}
+	}
+
+	public static void checkOnChest(Marker chestLoc) {
+		// Wait after punching chest to see how long it should take
+		new Scheduler(200, new ScheduledEvent() {
+			@Override
+			public void run() {
+				Block block = Minecraft.getMinecraft().world.getBlockState(new BlockPos(chestLoc.getX(),chestLoc.getY(),chestLoc.getZ())).getBlock();
+				if (block != Blocks.AIR) {
+					Looter.blacklistedChests.add(chestLoc);
+					//Minecraft.getMinecraft().player.sendMessage(new TextComponentString("[!] Blacklisted chest"));
+				}
+			}
+		});
+		
+		
 	}
 }
