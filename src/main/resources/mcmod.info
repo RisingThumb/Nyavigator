@@ -1,11 +1,11 @@
 [
 {
-  "modid": "piclient",
-  "name": "PiClient",
-  "description": "Utilities for Minecraft",
+  "modid": "thumbler",
+  "name": "Nyavigator",
+  "description": "Nyavigator",
   "version": "${version}",
   "mcversion": "${mcversion}",
-  "url": "https://risingthumb.neocities.org/index.html",
+  "url": "risingthumb.xyz",
   "updateUrl": "",
   "authorList": ["RisingThumb"],
   "credits": "RisingThumb",

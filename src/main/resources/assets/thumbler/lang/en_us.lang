@@ -1,0 +1,11 @@
+#Gui
+key.nyavigator.desc=Locations
+key.nyavigator.category=Cheating
+#Nyavigator
+chat.nyavigator.play=§a§l<Nyavigator>§r Onwards!
+chat.nyavigator.pause=§e§l<Nyavigator>§r HOLD!
+chat.nyavigator.stop=§c§l<Nyavigator>§r STOP!
+chat.nyavigator.arrived=§a§l<Nyavigator>§r We've arrived!
+chat.nyavigator.location=§e§l<Nyavigator>§r A location has been reached!
+chat.nyavigator.selectroute=§c§l<Nyavigator>§r You need to select a route!
+chat.nyavigator.setlocations=§c§l<Nyavigator>§r Meowster, you might want to set some locations!!

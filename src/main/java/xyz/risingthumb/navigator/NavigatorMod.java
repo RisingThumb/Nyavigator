@@ -1,10 +1,8 @@
-package com.risingthumb.navigator;
+package xyz.risingthumb.navigator;
 
 import org.apache.logging.log4j.Logger;
 
-import com.risingthumb.navigator.classes.Marker;
-import com.risingthumb.navigator.gui.GuiOptions;
-import com.risingthumb.navigator.proxy.IProxy;
+import baritone.api.BaritoneAPI;
 
 import org.apache.logging.log4j.LogManager;
 
@@ -16,12 +14,21 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import xyz.risingthumb.navigator.gui.ButtonFunctions;
+import xyz.risingthumb.navigator.gui.GuiNavigatorScreen;
+import xyz.risingthumb.navigator.navigation.NavigationEvents;
+import xyz.risingthumb.navigator.navigation.NavigationHandling;
+import xyz.risingthumb.navigator.proxy.IProxy;
+import xyz.risingthumb.navigator.util.Route;
 
 @Mod(modid=NavigatorMod.MODID, name=NavigatorMod.NAME, version= NavigatorMod.VERSION, acceptedMinecraftVersions=NavigatorMod.MC_VERSION)
 public class NavigatorMod {
-	public static final String MODID="piclient";
-	public static final String NAME="PiClient";
-	public static final String VERSION="1.1";
+	public static NavigationHandling navigator;
+	public static ButtonFunctions functions;
+	
+	public static final String MODID="thumbler";
+	public static final String NAME="Nyavigator";
+	public static final String VERSION="2.0";
 	public static final String MC_VERSION="[1.12.2]";
 	
 	public static Configuration CONFIG;
@@ -29,8 +36,8 @@ public class NavigatorMod {
 	
 	public static final Logger LOGGER = LogManager.getLogger(NavigatorMod.MODID);
 	
-	public static final String CLIENT="com.risingthumb.navigator.proxy.ClientProxy";
-	public static final String SERVER="com.risingthumb.navigator.proxy.ServerProxy";
+	public static final String CLIENT="xyz.risingthumb.navigator.proxy.ClientProxy";
+	public static final String SERVER="xyz.risingthumb.navigator.proxy.ServerProxy";
 	
 	@SidedProxy(clientSide=NavigatorMod.CLIENT, serverSide=NavigatorMod.SERVER)
 	public static IProxy proxy;
@@ -50,22 +57,26 @@ public class NavigatorMod {
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
 		proxy.postInit(event);
-		
+		settings();
+	}
+	
+	private void settings() {
+		functions = new ButtonFunctions();
+		navigator = new NavigationHandling();
 	}
 	
 	public static void syncConfig() {
 		try {
 			CONFIG.load();
 			// Loading markers
-			Property markers = CONFIG.get(Configuration.CATEGORY_GENERAL,
-					"markers", new String[] {
-							"Aspermont:-2850:64:-2140"
+			Property routes = CONFIG.get(Configuration.CATEGORY_GENERAL,
+					"routes", new String[] {
+							"Aspermont;-2850,64,-2140"
 					});
-			String[] waypoints = markers.getStringList();
-			GuiOptions.waypoints.clear();
-			for(String s:waypoints) {
-				String[] parts = s.split(":");
-				GuiOptions.waypoints.add(new Marker(parts[0], Integer.parseInt(parts[1]), Integer.parseInt(parts[2]), Integer.parseInt(parts[3])));
+			String[] elements = routes.getStringList();
+			GuiNavigatorScreen.routes.clear();
+			for (String s: elements) {
+				GuiNavigatorScreen.routes.add(new Route(s, 1));
 			}
 			
 		} catch(Exception e) {
@@ -80,19 +91,13 @@ public class NavigatorMod {
 	public static void saveConfig() {
 		try {
 			CONFIG.load();
-			Property markers = CONFIG.get(Configuration.CATEGORY_GENERAL,
-					"markers", new String[] {
-							"Aspermont:-2850:64:-2140"
-					}); // Aspermont is a default value
-			
-			String[] waypoints = new String[GuiOptions.waypoints.size()];
-			for (int i=0; i<waypoints.length; i++) {
-				Marker m = GuiOptions.waypoints.get(i);
-				String input = String.join(":",m.getString(),""+m.getX(),""+m.getY(),""+m.getZ());
-				waypoints[i]=input;
+			Property routes = CONFIG.get(Configuration.CATEGORY_GENERAL,
+					"routes", new String[] {});
+			String[] newRoutes = new String[GuiNavigatorScreen.routes.size()];
+			for (int i=0; i<newRoutes.length; i++) {
+				newRoutes[i] = GuiNavigatorScreen.routes.get(i).stringify();
 			}
-			
-			markers.set(waypoints);
+			routes.set(newRoutes);
 			
 		} catch(Exception e) {
 			

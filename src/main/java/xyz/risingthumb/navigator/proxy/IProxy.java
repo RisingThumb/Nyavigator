@@ -1,4 +1,4 @@
-package com.risingthumb.navigator.proxy;
+package xyz.risingthumb.navigator.proxy;
 
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
@@ -8,7 +8,7 @@ public interface IProxy {
 	public void preInit(FMLPreInitializationEvent event);
 	
 	public void init(FMLInitializationEvent event);
-	
+
 	public void postInit(FMLPostInitializationEvent event);
 
 }
